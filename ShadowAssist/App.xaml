@@ -1,0 +1,47 @@
+﻿<Application x:Class="ShadowAssist.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:converters="clr-namespace:MaterialDesignThemes.Wpf.Converters;assembly=MaterialDesignThemes.Wpf"
+             xmlns:local="clr-namespace:ShadowAssist"
+             StartupUri="MainWindow.xaml">
+    <Application.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Defaults.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Light.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignColors;component/Themes/Recommended/Primary/MaterialDesignColor.DeepPurple.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignColors;component/Themes/Recommended/Accent/MaterialDesignColor.DeepPurple.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+            <local:ShadowCutOutConverter x:Key="ShadowCutOutConverter" />
+            <Style TargetType="{x:Type local:Shadow}">
+                <Setter Property="materialDesign:ShadowAssist.ShadowDepth" Value="Depth0" />
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate>
+                            <Rectangle Name="CutOutRectangle"  IsHitTestVisible="False" Fill="White" Effect="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=(materialDesign:ShadowAssist.ShadowDepth), Converter={x:Static converters:ShadowConverter.Instance}}">
+                                <Rectangle.Clip>
+                                    <CombinedGeometry
+                                        GeometryCombineMode="Exclude"
+                                        Geometry2="{Binding RelativeSource={RelativeSource AncestorType=Rectangle}, Path=RenderedGeometry}">
+                                        <CombinedGeometry.Geometry1>
+                                            <RectangleGeometry>
+                                                <RectangleGeometry.Rect>
+                                                    <MultiBinding Converter="{StaticResource ShadowCutOutConverter}">
+                                                        <Binding ElementName="CutOutRectangle" />
+                                                        <Binding RelativeSource="{RelativeSource TemplatedParent}" Path="(materialDesign:ShadowAssist.ShadowDepth)" />
+                                                    </MultiBinding>
+                                                </RectangleGeometry.Rect>
+                                            </RectangleGeometry>
+                                        </CombinedGeometry.Geometry1>
+                                    </CombinedGeometry>
+                                </Rectangle.Clip>
+                            </Rectangle>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+        </ResourceDictionary>
+
+    </Application.Resources>
+</Application>
